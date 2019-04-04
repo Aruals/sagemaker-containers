@@ -48,3 +48,4 @@ SAGEMAKER_HYPERPARAMETERS = (
 MPI_PROCESSES_PER_HOST = "sagemaker_mpi_num_of_processes_per_host"  # type: int
 MPI_CUSTOM_OPTIONS = "sagemaker_mpi_custom_mpi_options"  # type: str
 SAGEMAKER_NETWORK_INTERFACE_NAME = 'sagemaker_network_interface_name'  # type: str
+PRELOAD_APP = 'SAGEMAKER_PRELOAD_GUNICORN_APP'  # type: str

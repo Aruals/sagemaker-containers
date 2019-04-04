@@ -75,6 +75,7 @@ def start(module_app):
 
     gunicorn = subprocess.Popen(['gunicorn',
                                  '--timeout', str(env.model_server_timeout),
+                                 '--preload', str(env.preload_app),
                                  '-k', 'gevent',
                                  '-b', gunicorn_bind_address,
                                  '--worker-connections', str(1000 * env.model_server_workers),

@@ -864,6 +864,7 @@ class ServingEnv(_Env):
         default_accept = os.environ.get(_params.DEFAULT_INVOCATIONS_ACCEPT_ENV, _content_types.JSON)
         http_port = os.environ.get(_params.SAGEMAKER_BIND_TO_PORT_ENV, '8080')
         safe_port_range = os.environ.get(_params.SAGEMAKER_SAFE_PORT_RANGE_ENV)
+        preload_app = util.strtobool(os.environ.get(_params.PRELOAD_APP, 'false')) == 1
 
         self._use_nginx = use_nginx
         self._model_server_timeout = model_server_timeout
@@ -872,6 +873,7 @@ class ServingEnv(_Env):
         self._default_accept = default_accept
         self._http_port = http_port
         self._safe_port_range = safe_port_range
+        self._preload_app = preload_app
 
     @property
     def use_nginx(self):  # type: () -> bool
@@ -920,6 +922,12 @@ class ServingEnv(_Env):
             str: HTTP port range that can be used by customers to avoid collisions with the HTTP port
                 specified by SageMaker for handling pings and invocations. For example: 1111-2222"""
         return self._safe_port_range
+
+    @property
+    def preload_app(self):  # type: () -> bool
+        """Returns:
+            bool: whether to preload gunicorn app. Default: False"""
+        return self._preload_app
 
 
 def write_env_vars(env_vars=None):  # type: (dict) -> None
