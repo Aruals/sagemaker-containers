@@ -73,14 +73,25 @@ def start(module_app):
         _create_nginx_config(env)
         nginx = subprocess.Popen(['nginx', '-c', nginx_config_file])
 
-    gunicorn = subprocess.Popen(['gunicorn',
-                                 '--timeout', str(env.model_server_timeout),
-                                 '-k', 'gevent',
-                                 '-b', gunicorn_bind_address,
-                                 '--worker-connections', str(1000 * env.model_server_workers),
-                                 '-w', str(env.model_server_workers),
-                                 '--log-level', 'info',
-                                 module_app])
+    if env.preload_app:
+        gunicorn = subprocess.Popen(['gunicorn',
+                                     '--timeout', str(env.model_server_timeout),
+                                     '--preload',
+                                     '-k', 'gevent',
+                                     '-b', gunicorn_bind_address,
+                                     '--worker-connections', str(1000 * env.model_server_workers),
+                                     '-w', str(env.model_server_workers),
+                                     '--log-level', 'info',
+                                     module_app])
+    else:
+        gunicorn = subprocess.Popen(['gunicorn',
+                                     '--timeout', str(env.model_server_timeout),
+                                     '-k', 'gevent',
+                                     '-b', gunicorn_bind_address,
+                                     '--worker-connections', str(1000 * env.model_server_workers),
+                                     '-w', str(env.model_server_workers),
+                                     '--log-level', 'info',
+                                     module_app])
 
     _add_sigterm_handler(nginx, gunicorn)
 
